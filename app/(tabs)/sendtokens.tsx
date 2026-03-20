@@ -30,8 +30,14 @@ export default function SendTokens() {
 
   const handleSend = async () => {
     if (!isConnected) {
-      // Logic for button when disconnected
-      await wallet.connect();
+      setLoading(true);
+      try {
+        await wallet.connect();
+      } catch (e: any) {
+        Alert.alert("CONNECTION_FAILED", e.message || "Wallet connection cancelled");
+      } finally {
+        setLoading(false);
+      }
       return;
     }
 
@@ -41,7 +47,6 @@ export default function SendTokens() {
 
     setLoading(true);
     try {
-      // Integrating the real hook's sending capability
       await wallet.sendSOL(recipient, parseFloat(amount));
       Alert.alert("SUCCESS", "Transaction Broadcasted!");
       setAmount("");
@@ -76,7 +81,7 @@ export default function SendTokens() {
             <ConnectButton
               connected={wallet.connected}
               connecting={wallet.connecting}
-              publicKey={wallet.publicKey ?? null}
+              publicKey={wallet.publicKey}
               onConnect={wallet.connect}
               onDisconnect={wallet.disconnect}
             />
