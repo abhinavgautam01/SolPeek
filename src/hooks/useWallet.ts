@@ -61,7 +61,7 @@ export function useWallet() {
     } finally {
       setConnecting(false);
     }
-  }, [cluster]);
+  }, [cluster, setPublicKey, setAuthToken]);
 
   /*
   DISCONNECT
@@ -69,7 +69,7 @@ export function useWallet() {
   const disconnect = useCallback(() => {
     setPublicKey(null);
     setAuthToken(null);
-  }, []);
+  }, [setPublicKey, setAuthToken]);
 
   /*
   SEND SOL — authorize + build + sign all in ONE transact() session
@@ -87,7 +87,13 @@ export function useWallet() {
         console.log("amountSOL:", amountSOL);
         console.log("cluster:", cluster);
 
-        const signature = await transact(async (wallet: Web3MobileWallet) => {
+        // Fetch blockhash BEFORE opening the wallet session so the session
+        // isn't held open during a network call (causes Phantom to drop/timeout).
+        console.log("Fetching blockhash...");
+        const { blockhash } = await connection.getLatestBlockhash();
+        console.log("Got blockhash:", blockhash);
+
+        const signedTx = await transact(async (wallet: Web3MobileWallet) => {
           console.log("=== INSIDE TRANSACT ===");
 
           // Step 1: reauthorize or authorize
@@ -115,12 +121,10 @@ export function useWallet() {
 
           setAuthToken(authResult.auth_token);
 
-          // Step 2: build tx
+          // Step 2: build tx using the pre-fetched blockhash
           console.log("Building transaction...");
           const from = new PublicKey(publicKey);
           const to = new PublicKey(toAddress);
-          const { blockhash } = await connection.getLatestBlockhash();
-          console.log("Got blockhash:", blockhash);
 
           const message = new TransactionMessage({
             payerKey: from,
@@ -135,23 +139,31 @@ export function useWallet() {
           }).compileToV0Message();
 
           const tx = new VersionedTransaction(message);
-          console.log("Transaction built, attempting signAndSend...");
+          console.log("Transaction built, attempting signTransactions...");
 
-          // Step 3: sign
+          // Step 3: sign only — popup appears reliably with signTransactions.
+          // signAndSendTransactions can silently skip the popup when auth also
+          // happened in the same session.
           try {
-            const result = await wallet.signAndSendTransactions({
+            const [signedTx] = await wallet.signTransactions({
               transactions: [tx],
             });
-            console.log("signAndSend SUCCESS:", result);
-            return result[0];
+            console.log("signTransactions SUCCESS");
+            return signedTx;
           } catch (signErr) {
             console.log("SIGN ERROR:", signErr);
             throw signErr;
           }
         });
 
-        console.log("=== FINAL SIGNATURE ===", signature);
-        return signature;
+        // Step 4: broadcast outside transact so we control the RPC endpoint
+        console.log("Broadcasting transaction...");
+        const sig = await connection.sendRawTransaction(
+          (signedTx as VersionedTransaction).serialize(),
+          { skipPreflight: false, preflightCommitment: "confirmed" },
+        );
+        console.log("=== FINAL SIGNATURE ===", sig);
+        return sig;
       } catch (e) {
         console.log("=== OUTER ERROR ===", e);
         throw e;
@@ -159,7 +171,7 @@ export function useWallet() {
         setSending(false);
       }
     },
-    [publicKey, authToken, connection, cluster],
+    [publicKey, authToken, connection, cluster, setAuthToken],
   );
 
   return {
