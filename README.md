@@ -483,55 +483,12 @@ This project was made possible by:
 
 ### Support Channels
 - **Issues**: [GitHub Issues](https://github.com/abhinavgautam01/SolPeek/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/abhinavgautam01/SolPeek/discussions)
 
 ### Getting Help
 1. Check this README for common questions
 2. Review [Known Issues](#known-issues) section
 3. Search existing issues
 4. Open a new issue with detailed information
-
----
-
-## Roadmap
-
-### Version 1.1 (Upcoming)
-- QR code scanner for wallet addresses
-- Transaction history with filtering
-- Multi-token swap support
-- Portfolio value tracking
-- Price alerts and notifications
-- Transaction signing history
-
-### Version 1.2 (Planned)
-- NFT viewer and gallery
-- Staking integration
-- DeFi protocol integration
-- Advanced analytics and charts
-- Theme customization (dark/light modes)
-- Export transaction history
-
-### Version 2.0 (Future)
-- Multi-chain support (Ethereum, Polygon, BSC)
-- Built-in wallet (no external adapter needed)
-- Social features (share addresses, portfolios)
-- Advanced trading features
-- Desktop version (Electron)
-- Web version with full functionality
-
----
-
-## Project Stats
-
-- **Lines of Code**: ~3,500+
-- **Components**: 15+
-- **Screens**: 7
-- **Dependencies**: 30+
-- **Supported Networks**: 2 (Devnet, Mainnet)
-- **Supported Platforms**: Android, iOS
-- **Development Start**: 2026
-- **Current Version**: 1.0.0
-- **License**: MIT
 
 ---
 
@@ -559,6 +516,6 @@ This project was made possible by:
 
 ⭐ Star this repository if you find it useful ⭐
 
-[Report Bug](https://github.com/abhinavgautam01/SolPeek/issues) · [Request Feature](https://github.com/abhinavgautam01/SolPeek/issues) · [View Demo](https://expo.dev/@abhinavgautam01/SolPeek)
+[Report Bug](https://github.com/abhinavgautam01/SolPeek/issues) · [Request Feature](https://github.com/abhinavgautam01/SolPeek/issues)
 
 </div>
