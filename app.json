@@ -25,6 +25,11 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.anonymous.SolPeek",
+      "usesCleartextTraffic": true,
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ],
       "intentFilters": [
         {
           "action": "VIEW",
@@ -34,7 +39,10 @@
               "scheme": "solpeek"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -43,6 +51,13 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "edea32f4-e0d9-4e4e-9f9a-ae935bb2b9ac"
+      }
+    },
+    "owner": "abhinavgautam01"
   }
 }

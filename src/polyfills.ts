@@ -1,8 +1,10 @@
 import { getRandomValues as expoCryptoGetRandomValues } from "expo-crypto";
 import { Buffer } from "buffer";
 
+// Polyfill Buffer globally
 global.Buffer = global.Buffer || Buffer;
 
+// Polyfill crypto
 class Crypto {
   getRandomValues = expoCryptoGetRandomValues;
 }
